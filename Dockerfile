@@ -1,13 +1,8 @@
-FROM node:6.11.5
+FROM nginx
+ENV AUTHOR=Docker
 
-WORKDIR /usr/src/app
-COPY package.json .
-RUN npm install
+WORKDIR /usr/share/nginx/html
+COPY Hello_docker.html /usr/share/nginx/html
 
-EXPOSE 8080
-CMD [ "npm", "start" ]
+CMD cd /usr/share/nginx/html && sed -e s/Docker/"$AUTHOR"/ Hello_docker.html > index.html ; nginx -g 'daemon off;'
 
-COPY . .
-
-HEALTHCHECK --interval=5s \
-  CMD curl --fail http://localhost:8080 || exit 1  
